@@ -1,0 +1,41 @@
+name: Release go
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.21'
+          check-latest: true
+          cache: true
+
+      - name: Test
+        run: go test -race -v ./...
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Build
+        run: python ./release.py
+        env:
+          CGO_ENABLED: '0'
+
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          files: './release/YzuCampusnetLogin*.zip'
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
