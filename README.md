@@ -22,7 +22,7 @@
 
 首先下载[Releases](https://github.com/luoboQAQ/yzu-campusnet-login/releases)里构建好的二进制程序。
 
-然后设置环境变量或者添加`.env`文件，环境变量定义如下：
+然后设置环境变量或者添加`.env`文件（使用`-e`参数可以指定读取环境变量文件的名称），环境变量定义如下：
 
 |变量名|描述|默认值|
 |-|-|-|

@@ -1,10 +1,11 @@
 package main
 
 import (
+	"flag"
 	"os"
 	"time"
 
-	_ "github.com/joho/godotenv/autoload"
+	"github.com/joho/godotenv"
 )
 
 var (
@@ -18,6 +19,13 @@ var (
 )
 
 func LoadEnv() {
+	envFile := flag.String("e", ".env", "name to your env file")
+	flag.Parse()
+	err := godotenv.Load(*envFile)
+	if err != nil {
+		panic("Error loading .env file")
+	}
+
 	USER_AGENT = os.Getenv("USER_AGENT")
 	if USER_AGENT == "" {
 		USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0"
