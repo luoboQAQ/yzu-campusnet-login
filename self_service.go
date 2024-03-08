@@ -95,6 +95,7 @@ func (s *SelfService) Logout(name, ip string) error {
 		return fmt.Errorf("error creat request: %v", err)
 	}
 	req.Header.Add("User-Agent", USER_AGENT)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := s.client.Do(req)
 	if err != nil {
