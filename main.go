@@ -24,8 +24,40 @@ func testConnection() bool {
 	return resp.StatusCode == 204
 }
 
+func logout() {
+	jar, _ := cookiejar.New(nil)
+	client := &http.Client{
+		Timeout: 5 * time.Second,
+		Jar:     jar,
+	}
+	SelfService := NewSelfService(client)
+	err := SelfService.Login(SSO_USERNAME, SSO_PASSWORD)
+	if err != nil {
+		log.Printf("Failed to login: %v\n", err)
+		return
+	}
+	log.Println("Login success")
+	onlines, err := SelfService.GetOnlines()
+	if err != nil {
+		log.Printf("Failed to get onlines: %v\n", err)
+		return
+	}
+	for _, online := range onlines {
+		err = SelfService.Logout(SSO_USERNAME, online)
+		if err != nil {
+			log.Printf("Failed to logout: %v\n", err)
+			return
+		}
+		log.Printf("Logout %s success\n", online)
+	}
+}
+
 func main() {
-	LoadEnv()
+	isLogout := LoadEnv()
+	if isLogout {
+		logout()
+		return
+	}
 	connected := false
 	for {
 		if !DEBUG && testConnection() {

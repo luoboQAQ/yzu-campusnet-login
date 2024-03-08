@@ -18,8 +18,9 @@ var (
 	DEBUG             bool
 )
 
-func LoadEnv() {
+func LoadEnv() bool {
 	envFile := flag.String("e", ".env", "name to your env file")
+	logout := flag.Bool("logout", false, "do you want logout")
 	flag.Parse()
 	err := godotenv.Load(*envFile)
 	if err != nil {
@@ -65,4 +66,5 @@ func LoadEnv() {
 	}
 
 	DEBUG = os.Getenv("DEBUG") == "true"
+	return *logout
 }
