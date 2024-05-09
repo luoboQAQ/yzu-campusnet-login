@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/cookiejar"
+	"strconv"
 	"time"
 )
 
@@ -53,7 +54,7 @@ func logout() {
 }
 
 func main() {
-	isLogout := LoadEnv()
+	isLogout, isQuery := LoadEnv()
 	if isLogout {
 		logout()
 		return
@@ -102,5 +103,28 @@ func main() {
 			continue
 		}
 		log.Println("Login service success")
+
+		if isQuery {
+			queryInfo := NewQueryInfo(client)
+			err := sso.Login(SSO_USERNAME, SSO_PASSWORD, "https://i.yzu.edu.cn/Login/CasLogin")
+			if err != nil {
+				log.Printf("Failed to login SSO: %v\n", err)
+				continue
+			}
+			token, err := queryInfo.GetToken()
+			if err != nil {
+				log.Printf("Failed to get token: %v\n", err)
+			}
+			info, err := queryInfo.GetInfoJson(token)
+			if err != nil {
+				log.Printf("Failed to query info: %v\n", err)
+			}
+			freeRemain, err := strconv.Atoi(info.SamInfo.Data.FreeRemain)
+			if err != nil {
+				log.Printf("Failed to convert freeRemain: %v\n", err)
+			}
+			hour := float64(freeRemain) / 60.0
+			log.Printf("RemainHour: %02.2fh\n", hour)
+		}
 	}
 }
