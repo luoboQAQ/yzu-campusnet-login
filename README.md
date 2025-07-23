@@ -8,7 +8,7 @@
 
 就是一个简单的登录校园网的脚本，直接下载[Releases](https://github.com/luoboQAQ/yzu-campusnet-login/releases)里构建好的二进制程序即可。
 
-截至2023/09/27开发完成时有效。
+截至2025/07/23开发完成时有效。
 
 ### 起因
 

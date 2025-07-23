@@ -105,3 +105,49 @@ func (c *CampusNet) LoginService(portalURL, userID, service string) error {
 
 	return nil
 }
+
+func (c *CampusNet) OldLoginService(portalURL, userID, password, service string) error {
+	host, queryString, err := c.GetHostQuery(portalURL)
+	if err != nil {
+		return err
+	}
+
+	formData := url.Values{
+		"userId":          {userID},
+		"password":        {password},
+		"service":         {url.QueryEscape(service)},
+		"queryString":     {queryString},
+		"operatorPwd":     {""},
+		"operatorUserId":  {""},
+		"validcode":       {""},
+		"passwordEncrypt": {"false"},
+	}
+
+	req, err := http.NewRequest("POST", fmt.Sprintf("http://%s/eportal/InterFace.do?method=login", host), strings.NewReader(formData.Encode()))
+	if err != nil {
+		return fmt.Errorf("error logging in to service: %v", err)
+	}
+	req.Header.Add("User-Agent", USER_AGENT)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return fmt.Errorf("error logging in to service: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("error logging in to service: %s", resp.Status)
+	}
+
+	var data map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+		return fmt.Errorf("error decoding JSON response: %v", err)
+	}
+
+	if data["result"].(string) != "success" {
+		return errors.New(data["message"].(string))
+	}
+
+	return nil
+}

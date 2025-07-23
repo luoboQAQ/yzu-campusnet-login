@@ -80,7 +80,7 @@ func main() {
 			Jar:     jar,
 		}
 		campusNet := NewCampusNet(client)
-		sso := NewSSO(client)
+		// sso := NewSSO(client)
 
 		portalUrl, err := campusNet.GetPortalURL()
 		if err != nil {
@@ -89,14 +89,14 @@ func main() {
 		}
 		log.Printf("Portal url: %s\n", portalUrl)
 
-		err = sso.Login(SSO_USERNAME, SSO_PASSWORD, portalUrl)
-		if err != nil {
-			log.Printf("Failed to login SSO: %v\n", err)
-			continue
-		}
-		log.Println("Login SSO success")
+		// err = sso.Login(SSO_USERNAME, SSO_PASSWORD, portalUrl)
+		// if err != nil {
+		// 	log.Printf("Failed to login SSO: %v\n", err)
+		// 	continue
+		// }
+		// log.Println("Login SSO success")
 
-		err = campusNet.LoginService(portalUrl, SSO_USERNAME, CAMPUSNET_SERVICE)
+		err = campusNet.OldLoginService(portalUrl, SSO_USERNAME, SSO_PASSWORD, CAMPUSNET_SERVICE)
 		if err != nil {
 			log.Printf("Failed to login services: %v\n", err)
 			continue
