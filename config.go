@@ -24,7 +24,10 @@ func LoadEnv() bool {
 	flag.Parse()
 	err := godotenv.Load(*envFile)
 	if err != nil {
-		panic("Error loading .env file")
+		err := os.Getenv("SSO_USERNAME")
+		if err == "" {
+			panic("Error loading .env file")
+		}
 	}
 
 	USER_AGENT = os.Getenv("USER_AGENT")
