@@ -73,7 +73,7 @@ func main() {
 		log.Printf("Start login in %ds...\n", START_DELAY/time.Second)
 		time.Sleep(START_DELAY)
 
-		log.Printf("Username: %s, Password: %s, Service: %s\n", SSO_USERNAME, SSO_PASSWORD, CAMPUSNET_SERVICE)
+		log.Printf("Username: %s, Service: %s\n", SSO_USERNAME, CAMPUSNET_SERVICE)
 		jar, _ := cookiejar.New(nil)
 		client := &http.Client{
 			Timeout: 5 * time.Second,
